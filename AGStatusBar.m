@@ -185,7 +185,6 @@ static void spreadViews(NSArray *views, CGFloat padding, CGFloat gap, Boolean le
     for (UIView *v in views)
         if (!v.hidden) {
             if ([v isKindOfClass:_statusBarItemViewClass] && ![[v valueForKey:@"_visible"] boolValue]) continue;
-            v.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.5];
             if (v.superview != statusBarForegroundView())
                 [statusBarForegroundView() addSubview:v];
             if ([v isKindOfClass:[UILabel class]])
