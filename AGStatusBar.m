@@ -12,6 +12,7 @@
 @implementation AGStatusBar {
     UIImageView *tintColorView;
     NSString *prevSavedTime;
+    CGFloat prevSavedBatteryLevel;
     NSMutableSet *hiddenItems;
     NSMutableDictionary <NSString *, NSMutableArray *> *customItems;
     Boolean animateNextGlobalTintColorChange;
@@ -45,12 +46,17 @@ static Class _statusBarItemViewClass = nil;
 
 
 + (instancetype)sharedInstance {
-    static id sharedInstance = nil;
+    static AGStatusBar *sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedInstance = [[AGStatusBar alloc] init];
+        
         // Not using Key-Value Observation in case Clock view reinstanciated
         [NSTimer scheduledTimerWithTimeInterval:1 target:sharedInstance selector:@selector(everySecond) userInfo:nil repeats:1];
+        sharedInstance->prevSavedTime = [timeSystemView() valueForKey:_timeStringSelectorName];
+        
+        [UIDevice currentDevice].batteryMonitoringEnabled = YES;
+        sharedInstance->prevSavedBatteryLevel = [UIDevice currentDevice].batteryLevel;
     });
     return sharedInstance;
 }
@@ -67,7 +73,7 @@ static Class _statusBarItemViewClass = nil;
 }
 
 
-- (void)setGlobalTintColor:(UIColor *)globalTintColor animated:(Boolean)animated {
+- (void)setGlobalTintColor:(UIColor *)globalTintColor animated:(Boolean)animated {    
     if (_globalTintColor != globalTintColor) {
         _globalTintColor = globalTintColor;
         if (!_globalTintColor) {
@@ -150,12 +156,22 @@ static UIColor *currentSystemTintColor() {
 
 
 - (void)everySecond {
+    Boolean needForceLayout = NO;
+    
     NSString *newTime = [timeSystemView() valueForKey:_timeStringSelectorName];
     if (![newTime isEqualToString:prevSavedTime]) {
         prevSavedTime = newTime;
-        if (!![AGStatusBar sharedInstance].globalTintColor && !timeSystemView().hidden)
-            [self forceLayout];
+        needForceLayout |= !!_globalTintColor && !timeSystemView().hidden;
     }
+    
+    CGFloat newBatteryLevel = [UIDevice currentDevice].batteryLevel;
+    if (newBatteryLevel != prevSavedBatteryLevel) {
+        prevSavedBatteryLevel = newBatteryLevel;
+        needForceLayout |= !!_globalTintColor;
+    }
+    
+    if (needForceLayout)
+        [self forceLayout];
 }
 
 
