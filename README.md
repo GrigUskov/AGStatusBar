@@ -10,15 +10,25 @@ Other features:
 
 Language: Objective-C.
 
+---
+
+This component was created mostly for research / PoC purposes. <b>USE IT AT YOUR OWN RISK</b>
+
+<b>WARNING</b> This ismplementation violates p.2.5.9 of Apple App Store Review Guidelines:
+
+<i>2.5.9 Apps that alter the functions of standard switches, such as the Volume Up/Down and Ring/Silent switches, or other native user interface elements or behaviors will be rejected.</i>
+
+---
+
 <img src="http://alsedi.com/github/AGStatusBar_anim.gif">
 
 Global tinting:
 <pre>
-    [AGStatusBar sharedInstance].globalTintColor = [UIColor redColor];
-    [AGStatusBar sharedInstance].globalTintColor = [UIColor blueColor];
-    [AGStatusBar sharedInstance].globalTintColor = [[UIColor yellowColor] colorWithAlphaComponent:0.5];
-    [AGStatusBar sharedInstance].globalTintColor = [UIColor darkGrayColor];	
-	...    
+[AGStatusBar sharedInstance].globalTintColor = [UIColor redColor];
+[AGStatusBar sharedInstance].globalTintColor = [UIColor blueColor];
+[AGStatusBar sharedInstance].globalTintColor = [[UIColor yellowColor] colorWithAlphaComponent:0.5];
+[AGStatusBar sharedInstance].globalTintColor = [UIColor darkGrayColor];	
+...    
 </pre>
 
 
@@ -27,9 +37,9 @@ Global tinting:
 
 Hidden system items:
 <pre>
-	[[AGStatusBar sharedInstance] setSystemView:kAGSBTimeItem hidden:YES];
-	[[AGStatusBar sharedInstance] setSystemView:kAGSBServiceItem hidden:YES];
-	[[AGStatusBar sharedInstance] setSystemView:kAGSBBatteryItem hidden:YES];	
+[[AGStatusBar sharedInstance] setSystemView:kAGSBTimeItem hidden:YES];
+[[AGStatusBar sharedInstance] setSystemView:kAGSBServiceItem hidden:YES];
+[[AGStatusBar sharedInstance] setSystemView:kAGSBBatteryItem hidden:YES];	
 </pre>
 
 
@@ -38,17 +48,17 @@ Hidden system items:
 
 Custom items:
 <pre>
-    [[AGStatusBar sharedInstance] setSystemView:kAGSBDataNetworkItem hidden:YES];
-    [[AGStatusBar sharedInstance] setSystemView:kAGSBBatteryItem hidden:YES];
-    [[AGStatusBar sharedInstance] setSystemView:kAGSBTimeItem hidden:YES];
+[[AGStatusBar sharedInstance] setSystemView:kAGSBDataNetworkItem hidden:YES];
+[[AGStatusBar sharedInstance] setSystemView:kAGSBBatteryItem hidden:YES];
+[[AGStatusBar sharedInstance] setSystemView:kAGSBTimeItem hidden:YES];
     
-    [[AGStatusBar sharedInstance] addText:@"Analogue" at:CustomViewLocationLeft];
+[[AGStatusBar sharedInstance] addText:@"Analogue" at:CustomViewLocationLeft];
     
-    UIImage *imagePower = [UIImage imageNamed:@"power"];
-    [[AGStatusBar sharedInstance] addImage:imagePower at:CustomViewLocationRightEdge];
+UIImage *imagePower = [UIImage imageNamed:@"power"];
+[[AGStatusBar sharedInstance] addImage:imagePower at:CustomViewLocationRightEdge];
     
-    UIImage *imageAndroid = [UIImage imageNamed:@"android"];
-    [[AGStatusBar sharedInstance] addImage:imageAndroid at:CustomViewLocationCenterRight];
+UIImage *imageAndroid = [UIImage imageNamed:@"android"];
+[[AGStatusBar sharedInstance] addImage:imageAndroid at:CustomViewLocationCenterRight];
 </pre>
 
 ---
@@ -56,9 +66,9 @@ Custom items:
 
 Custom item without automatic tinting:
 <pre>
-	...    
-    UIImage *imageAndroid = [UIImage imageNamed:@"android"];
-    UIView *androidIco = [[AGStatusBar sharedInstance] addImage:imageAndroid at:CustomViewLocationCenterRight];
-    androidIco.tag = AGSB_DO_NOT_AUTOTINT_CUSTOM_VIEW;
+...    
+UIImage *imageAndroid = [UIImage imageNamed:@"android"];
+UIView *androidIco = [[AGStatusBar sharedInstance] addImage:imageAndroid at:CustomViewLocationCenterRight];
+androidIco.tag = AGSB_DO_NOT_AUTOTINT_CUSTOM_VIEW;
 </pre>
 
