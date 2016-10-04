@@ -82,7 +82,8 @@ static Class _statusBarItemViewClass = nil;
     
     if (!tintColorView)
         [statusBarView() addSubview:tintColorView = [[UIImageView alloc] init]];
-    tintColorView.image = tintImage(image, _globalTintColor);
+    tintColorView.tintColor = _globalTintColor;
+    tintColorView.image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }
 
 
@@ -92,8 +93,10 @@ static Class _statusBarItemViewClass = nil;
         if (view.tag != AGSB_DO_NOT_AUTOTINT_CUSTOM_VIEW) {
             if ([view isKindOfClass:[UILabel class]])
                 ((UILabel *)view).textColor = systemTintColor;
-            if ([view isKindOfClass:[UIImageView class]])
-                ((UIImageView *)view).image = tintImage(((UIImageView *)view).image, systemTintColor);
+            if ([view isKindOfClass:[UIImageView class]]) {
+                ((UIImageView *)view).tintColor = systemTintColor;
+                ((UIImageView *)view).image = [((UIImageView *)view).image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            }
         }
 }
 
@@ -322,16 +325,6 @@ static NSMutableArray <UIView *>*rightSystemViews() {
 
 static UIView *timeSystemView() {
     return subviewOfClass(statusBarForegroundView(), _statusBarTimeItemViewClass);
-}
-
-
-static UIImage *tintImage(UIImage *image, UIColor *color) {
-    UIGraphicsBeginImageContextWithOptions(image.size, NO, 0);
-    [color setFill];
-    [[image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] drawAtPoint:CGPointZero];
-    UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return result;
 }
 
 
