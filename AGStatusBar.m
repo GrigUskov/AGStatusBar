@@ -18,6 +18,7 @@
 }
 
 
+#define tintAnimationDuration 0.4
 
 static NSString *_statusBarSelectorName = nil;
 static NSString *_timeStringSelectorName = nil;
@@ -72,18 +73,18 @@ static Class _statusBarItemViewClass = nil;
         if (!_globalTintColor) {
             statusBarForegroundView().hidden = NO;
             if (animated) {
+                UIView *oldTintColorView = tintColorView;
                 statusBarForegroundView().alpha = 0;
-                [UIView animateWithDuration:animated ? 0.5 : 0 animations:^{
-                    tintColorView.alpha = 0;
+                [UIView animateWithDuration:tintAnimationDuration animations:^{
+                    oldTintColorView.alpha = 0;
                     statusBarForegroundView().alpha = 1;
                 } completion:^(BOOL finished) {
-                    [tintColorView removeFromSuperview];
-                    tintColorView = nil;
+                    [oldTintColorView removeFromSuperview];
                 }];
-            } else {
-                [tintColorView removeFromSuperview];
-                tintColorView = nil;
             }
+            [tintColorView removeFromSuperview];
+            tintColorView = nil;
+            
             [self applyCustomViewsSystemTintColor];
         } else {
             animateNextGlobalTintColorChange = animated;
@@ -93,7 +94,7 @@ static Class _statusBarItemViewClass = nil;
 }
 
 
-- (void)applyTintColor {
+static UIImageView *makeTintedForegroundStatusBarSnapshot(UIColor *tintColor) {
     UIGraphicsBeginImageContextWithOptions(statusBarForegroundView().bounds.size, NO, 0);
     statusBarForegroundView().hidden = NO;
     [statusBarForegroundView().layer renderInContext:UIGraphicsGetCurrentContext()];
@@ -101,33 +102,41 @@ static Class _statusBarItemViewClass = nil;
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    if (!tintColorView) {
-        [statusBarView() addSubview:tintColorView = [[UIImageView alloc] init]];
-        tintColorView.alpha = 0;
-    }
-    tintColorView.image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    UIImageView *result = [[UIImageView alloc] initWithImage:[image imageWithRenderingMode:!!tintColor ? UIImageRenderingModeAlwaysTemplate : UIImageRenderingModeAlwaysOriginal]];
+    result.tintColor = tintColor;
+    
+    return result;
+}
+
+
+static UIColor *currentSystemTintColor() {
+    return [UIApplication sharedApplication].statusBarStyle == UIStatusBarStyleDefault ? [UIColor blackColor] : [UIColor whiteColor];
+}
+
+
+- (void)applyTintColor {
+    UIView *oldTintColorView = tintColorView;
+    [statusBarView() insertSubview:tintColorView = makeTintedForegroundStatusBarSnapshot(_globalTintColor) belowSubview:statusBarForegroundView()];
+    
     if (animateNextGlobalTintColorChange) {
-        if (tintColorView.alpha == 0) {
-            statusBarForegroundView().hidden = NO;
-            statusBarForegroundView().alpha = 1;
-        }
-        [UIView animateWithDuration:0.5 animations:^{
-            statusBarForegroundView().alpha = 0;
+        if (!oldTintColorView)
+            [statusBarView() insertSubview:oldTintColorView = makeTintedForegroundStatusBarSnapshot(nil) belowSubview:tintColorView];
+        tintColorView.alpha = 0;
+        [UIView animateWithDuration:tintAnimationDuration animations:^{
             tintColorView.alpha = 1;
-            tintColorView.tintColor = _globalTintColor;
+            oldTintColorView.alpha = 0;
         } completion:^(BOOL finished) {
-            statusBarForegroundView().hidden = YES;
-            statusBarForegroundView().alpha = 1;
+            [oldTintColorView removeFromSuperview];
         }];
-    } else {
-        tintColorView.tintColor = _globalTintColor;
-        tintColorView.alpha = 1;
-    }
+    } else
+        [oldTintColorView removeFromSuperview];
+    
+    animateNextGlobalTintColorChange = NO;
 }
 
 
 - (void)applyCustomViewsSystemTintColor {
-    UIColor *systemTintColor = [UIApplication sharedApplication].statusBarStyle == UIStatusBarStyleDefault ? [UIColor blackColor] : [UIColor whiteColor];
+    UIColor *systemTintColor = currentSystemTintColor();
     for (UIView *view in self.allCustomViews)
         if (view.tag != AGSB_DO_NOT_AUTOTINT_CUSTOM_VIEW) {
             if ([view isKindOfClass:[UILabel class]])
@@ -213,10 +222,9 @@ static void swizzledLayoutSubviews(UIView *self, SEL _cmd) {
         spreadViews(centerViews, (statusBarForegroundView().frame.size.width - width) / 2, _gap, YES);
     }
     
-    if (!![AGStatusBar sharedInstance].globalTintColor) {
+    if (!![AGStatusBar sharedInstance].globalTintColor)
         [[AGStatusBar sharedInstance] applyTintColor];
-        [AGStatusBar sharedInstance]->tintColorView.frame = statusBarForegroundView().frame;
-    } else {
+    else {
         [[AGStatusBar sharedInstance] applyCustomViewsSystemTintColor];
     }
 }
