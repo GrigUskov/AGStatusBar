@@ -18,13 +18,12 @@ This component was created mostly for research / PoC purposes. <b>USE IT AT YOUR
 
 ---
 
+Global tinting:
 <img src="http://alsedi.com/github/AGStatusBar_anim.gif">
 
-Global tinting:
 <pre>
 [AGStatusBar sharedInstance].globalTintColor = [UIColor redColor];
 [AGStatusBar sharedInstance].globalTintColor = [UIColor blueColor];
-[AGStatusBar sharedInstance].globalTintColor = [[UIColor yellowColor] colorWithAlphaComponent:0.5];
 [AGStatusBar sharedInstance].globalTintColor = [UIColor darkGrayColor];	
 ...    
 </pre>
