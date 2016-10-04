@@ -4,9 +4,7 @@ Customization of system Status Bar for iOS, including (sure, while your app is r
 * globalTintColor - colorize all text and icons.
 * Arbitarry hire system items, s.a. clock, battery, cellular network name and others.
 * Add your own text, iamge or custom view items at any location.
-
-Other features:
-* Maintain Black/White custom views foreground color according to current UIStatusBarStyle.
+* Maintain Black/White custom views foreground color according to current UIStatusBarStyle (if not global tinted).
 
 Language: Objective-C.
 
