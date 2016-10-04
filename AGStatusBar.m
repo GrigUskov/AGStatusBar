@@ -14,6 +14,7 @@
     NSString *prevSavedTime;
     NSMutableSet *hiddenItems;
     NSMutableDictionary <NSString *, NSMutableArray *> *customItems;
+    Boolean animateNextGlobalTintColorChange;
 }
 
 
@@ -61,14 +62,34 @@ static Class _statusBarItemViewClass = nil;
 
 // ---------------------------- tintColor ------------------------------ //
 - (void)setGlobalTintColor:(UIColor *)globalTintColor {
-    _globalTintColor = globalTintColor;
-    if (!_globalTintColor) {
-        statusBarForegroundView().hidden = NO;
-        [tintColorView removeFromSuperview];
-        tintColorView = nil;
-        [self applyCustomViewsSystemTintColor];
-    } else
-        [self forceLayout];
+    [self setGlobalTintColor:globalTintColor animated:NO];
+}
+
+
+- (void)setGlobalTintColor:(UIColor *)globalTintColor animated:(Boolean)animated {
+    if (_globalTintColor != globalTintColor) {
+        _globalTintColor = globalTintColor;
+        if (!_globalTintColor) {
+            statusBarForegroundView().hidden = NO;
+            if (animated) {
+                statusBarForegroundView().alpha = 0;
+                [UIView animateWithDuration:animated ? 0.5 : 0 animations:^{
+                    tintColorView.alpha = 0;
+                    statusBarForegroundView().alpha = 1;
+                } completion:^(BOOL finished) {
+                    [tintColorView removeFromSuperview];
+                    tintColorView = nil;
+                }];
+            } else {
+                [tintColorView removeFromSuperview];
+                tintColorView = nil;
+            }
+            [self applyCustomViewsSystemTintColor];
+        } else {
+            animateNextGlobalTintColorChange = animated;
+            [self forceLayout];
+        }
+    }
 }
 
 
@@ -80,10 +101,28 @@ static Class _statusBarItemViewClass = nil;
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    if (!tintColorView)
+    if (!tintColorView) {
         [statusBarView() addSubview:tintColorView = [[UIImageView alloc] init]];
-    tintColorView.tintColor = _globalTintColor;
+        tintColorView.alpha = 0;
+    }
     tintColorView.image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    if (animateNextGlobalTintColorChange) {
+        if (tintColorView.alpha == 0) {
+            statusBarForegroundView().hidden = NO;
+            statusBarForegroundView().alpha = 1;
+        }
+        [UIView animateWithDuration:0.5 animations:^{
+            statusBarForegroundView().alpha = 0;
+            tintColorView.alpha = 1;
+            tintColorView.tintColor = _globalTintColor;
+        } completion:^(BOOL finished) {
+            statusBarForegroundView().hidden = YES;
+            statusBarForegroundView().alpha = 1;
+        }];
+    } else {
+        tintColorView.tintColor = _globalTintColor;
+        tintColorView.alpha = 1;
+    }
 }
 
 

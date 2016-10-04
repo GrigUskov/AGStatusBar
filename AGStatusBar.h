@@ -38,6 +38,7 @@ typedef enum {
 + (instancetype)sharedInstance;
 
 @property (nonatomic) UIColor *globalTintColor;
+- (void)setGlobalTintColor:(UIColor *)globalTintColor animated:(Boolean)animated;
 
 - (void)setSystemView:(NSString *)viewKey hidden:(Boolean)hidden;
 
