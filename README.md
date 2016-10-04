@@ -31,7 +31,7 @@ Global tinting:
 
 ---
 
-Hidden system items:
+Hidde system items:
 
 <img src="http://alsedi.com/github/AGStatusBar_hidden.png">
 
@@ -43,7 +43,7 @@ Hidden system items:
 
 ---
 
-Custom items:
+Add custom items:
 
 <img src="http://alsedi.com/github/AGStatusBar_custom.png">
 
@@ -65,7 +65,7 @@ UIImage *imageAndroid = [UIImage imageNamed:@"android"];
 
 Custom item without automatic tinting:
 
-<img src="http://alsedi.com/github/AGStatusBar_custom.png">
+<img src="http://alsedi.com/github/AGStatusBar_custom_notint.png">
 
 <pre>
 ...    
