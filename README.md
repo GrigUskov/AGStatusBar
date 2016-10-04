@@ -10,7 +10,7 @@ Language: Objective-C.
 
 ---
 
-This component was created mostly for research / PoC purposes. <b>USE IT AT YOUR OWN RISK</b>
+<b>DISCLAIMER</b> This component was created mostly for research / PoC purposes. USE IT AT YOUR OWN RISK
 
 <b>WARNING</b> This ismplementation violates p.2.5.9 of Apple App Store Review Guidelines:
 
