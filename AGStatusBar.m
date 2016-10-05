@@ -68,15 +68,15 @@ static Class _statusBarItemViewClass = nil;
 
 
 // ---------------------------- tintColor ------------------------------ //
-- (void)setGlobalTintColor:(UIColor *)globalTintColor {
-    [self setGlobalTintColor:globalTintColor animated:NO];
+- (void)setTintColor:(UIColor *)tintColor {
+    [self setTintColor:tintColor animated:NO];
 }
 
 
-- (void)setGlobalTintColor:(UIColor *)globalTintColor animated:(Boolean)animated {    
-    if (_globalTintColor != globalTintColor) {
-        _globalTintColor = globalTintColor;
-        if (!_globalTintColor) {
+- (void)setTintColor:(UIColor *)tintColor animated:(Boolean)animated {
+    if (_tintColor != tintColor) {
+        _tintColor = tintColor;
+        if (!_tintColor) {
             statusBarForegroundView().hidden = NO;
             if (animated) {
                 UIView *oldTintColorView = tintColorView;
@@ -87,8 +87,8 @@ static Class _statusBarItemViewClass = nil;
                 } completion:^(BOOL finished) {
                     [oldTintColorView removeFromSuperview];
                 }];
-            }
-            [tintColorView removeFromSuperview];
+            } else
+                [tintColorView removeFromSuperview];
             tintColorView = nil;
             
             [self applyCustomViewsSystemTintColor];
@@ -122,7 +122,7 @@ static UIColor *currentSystemTintColor() {
 
 - (void)applyTintColor {
     UIView *oldTintColorView = tintColorView;
-    [statusBarView() insertSubview:tintColorView = makeTintedForegroundStatusBarSnapshot(_globalTintColor) belowSubview:statusBarForegroundView()];
+    [statusBarView() insertSubview:tintColorView = makeTintedForegroundStatusBarSnapshot(_tintColor) belowSubview:statusBarForegroundView()];
     
     if (animateNextGlobalTintColorChange) {
         if (!oldTintColorView)
@@ -161,13 +161,13 @@ static UIColor *currentSystemTintColor() {
     NSString *newTime = [timeSystemView() valueForKey:_timeStringSelectorName];
     if (![newTime isEqualToString:prevSavedTime]) {
         prevSavedTime = newTime;
-        needForceLayout |= !!_globalTintColor && !timeSystemView().hidden;
+        needForceLayout |= !!_tintColor && !timeSystemView().hidden;
     }
     
     CGFloat newBatteryLevel = [UIDevice currentDevice].batteryLevel;
     if (newBatteryLevel != prevSavedBatteryLevel) {
         prevSavedBatteryLevel = newBatteryLevel;
-        needForceLayout |= !!_globalTintColor;
+        needForceLayout |= !!_tintColor;
     }
     
     if (needForceLayout)
@@ -238,7 +238,7 @@ static void swizzledLayoutSubviews(UIView *self, SEL _cmd) {
         spreadViews(centerViews, (statusBarForegroundView().frame.size.width - width) / 2, _gap, YES);
     }
     
-    if (!![AGStatusBar sharedInstance].globalTintColor)
+    if (!![AGStatusBar sharedInstance].tintColor)
         [[AGStatusBar sharedInstance] applyTintColor];
     else {
         [[AGStatusBar sharedInstance] applyCustomViewsSystemTintColor];

@@ -29,7 +29,7 @@ typedef enum {
 #define kAGSBQuietModeItem 		@"QuietMode"
 #define kAGSBTimeItem 			@"Time"             // Clock
 #define BreadcrumbItem          @"Breadcrumb"       // [<] Back to AppName
-#define kAGSBActivityItem		@"Activity"         // UIApplication.networkActivityIndicator !!! not animating if tinted :(
+#define kAGSBActivityItem		@"Activity"         // UIApplication.networkActivityIndicator and iTunes Synch Activity !!! not animating if tinted :(
 
 #define AGSB_DO_NOT_AUTOTINT_CUSTOM_VIEW 7770554 // set this tag to custom view to preserve it's color regardless of _System Status Bar Color_ changes (custom tintColor is applied to all views)
 
@@ -37,8 +37,8 @@ typedef enum {
 
 + (instancetype)sharedInstance;
 
-@property (nonatomic) UIColor *globalTintColor;
-- (void)setGlobalTintColor:(UIColor *)globalTintColor animated:(Boolean)animated;
+@property (nonatomic) UIColor *tintColor;
+- (void)setTintColor:(UIColor *)tintColor animated:(Boolean)animated;
 
 - (void)setSystemView:(NSString *)viewKey hidden:(Boolean)hidden;
 
