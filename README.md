@@ -1,10 +1,10 @@
 # AGStatusBar
 
 Customization of system Status Bar for iOS, including (sure, while your app is running):
-* globalTintColor - colorize all text and icons.
+* tintColor - colorize all text and icons.
 * Arbitarry hire system items, s.a. clock, battery, cellular network name and others.
 * Add your own text, iamge or custom view items at any location.
-* Maintain Black/White custom views foreground color according to current UIStatusBarStyle (if not global tinted).
+* Maintain Black/White custom views foreground color according to current UIStatusBarStyle (if not tinted).
 
 Language: Objective-C.
 
@@ -18,14 +18,14 @@ Language: Objective-C.
 
 ---
 
-Global tinting:
+Status bar tinting:
 
 <img src="http://alsedi.com/github/AGStatusBar_anim.gif">
 
 <pre>
-[AGStatusBar sharedInstance].globalTintColor = [UIColor redColor];
-[AGStatusBar sharedInstance].globalTintColor = [UIColor blueColor];
-[AGStatusBar sharedInstance].globalTintColor = [UIColor darkGrayColor];	
+[AGStatusBar sharedInstance].tintColor = [UIColor redColor];
+[AGStatusBar sharedInstance].tintColor = [UIColor blueColor];
+[AGStatusBar sharedInstance].tintColor = [UIColor darkGrayColor];	
 ...    
 </pre>
 
@@ -73,4 +73,3 @@ UIImage *imageAndroid = [UIImage imageNamed:@"android"];
 UIView *androidIco = [[AGStatusBar sharedInstance] addImage:imageAndroid at:CustomViewLocationCenterRight];
 androidIco.tag = AGSB_DO_NOT_AUTOTINT_CUSTOM_VIEW;
 </pre>
-
