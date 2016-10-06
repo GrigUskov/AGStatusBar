@@ -2,7 +2,7 @@
 
 Customization of system Status Bar for iOS, including (sure, while your app is running):
 * tintColor - colorize all text and icons.
-* Arbitarry hide system items, s.a. clock, battery, cellular network name and others.
+* Hide any system items, s.a. clock, battery, cellular network name and others.
 * Add your own text, iamge or custom view items at any location.
 * Maintain Black/White custom views foreground color according to current UIStatusBarStyle (if not tinted).
 
